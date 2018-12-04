@@ -1,0 +1,90 @@
+missing module named pyimod03_importers - imported by e:\python27\lib\site-packages\PyInstaller\loader\rthooks\pyi_rth_pkgres.py
+missing module named resource - imported by posix, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named posix - imported by os, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named 'six.moves.urllib' - imported by 'six.moves.urllib', D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named macresource - imported by MacOS, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named MacOS - imported by platform, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named _dummy_threading - imported by dummy_threading, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named 'OpenSSL.crypto' - imported by eventlet.green.OpenSSL.crypto, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named 'OpenSSL.tsafe' - imported by eventlet.green.OpenSSL.tsafe, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named 'OpenSSL.version' - imported by eventlet.green.OpenSSL.version, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named 'OpenSSL.SSL' - imported by eventlet.green.OpenSSL.SSL, werkzeug.serving, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named simplejson - imported by psycopg2._json, itsdangerous, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named ipaddress - imported by psycopg2._ipaddress, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named OpenSSL - imported by eventlet.greenio.base, eventlet.green.OpenSSL.SSL, flask.cli, werkzeug.serving, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named itimer - imported by eventlet.hubs.hub, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named grp - imported by shutil, tarfile, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named winreg.OpenKeyEx - imported by winreg, platform, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named winreg.QueryValueEx - imported by winreg, platform, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named winreg.CloseKey - imported by winreg, platform, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named winreg.HKEY_LOCAL_MACHINE - imported by winreg, platform, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named gestalt - imported by platform, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named java - imported by platform, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named 'java.lang' - imported by platform, D:\python\pyinstall\qinshan_data_collection\main.py, xml.sax._exceptions
+missing module named vms_lib - imported by platform, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named 'urllib.parse' - imported by pkg_resources, redis._compat, werkzeug.http, jinja2._compat, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named 'importlib._bootstrap' - imported by eventlet.patcher, pkg_resources, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named Carbon - imported by plistlib, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named 'Carbon.Files' - imported by plistlib, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named 'Carbon.File' - imported by plistlib, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named _xmlplus - imported by xml, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named _sysconfigdata - imported by distutils.sysconfig, sysconfig, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named rourl2path - imported by urllib, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named SOCKS - imported by ftplib, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named termios - imported by getpass, click.termui, tty, click._termui_impl, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named EasyDialogs - imported by getpass, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named _scproxy - imported by urllib, future.backports.urllib.request, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named 'ecdsa.keys' - imported by dns.dnssec
+missing module named 'ecdsa.ellipticcurve' - imported by dns.dnssec
+missing module named 'ecdsa.ecdsa' - imported by dns.dnssec
+missing module named ecdsa - imported by dns.dnssec
+missing module named 'Crypto.Util' - imported by dns.dnssec
+missing module named 'Crypto.PublicKey' - imported by dns.dnssec
+missing module named Crypto - imported by dns.dnssec
+missing module named gevent - imported by engineio.async_gevent, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named geventwebsocket - imported by engineio.async_gevent, D:\python\pyinstall\qinshan_data_collection\main.py
+runtime module named six.moves - imported by engineio.server, eventlet.green.thread, eventlet.queue, eventlet.wsgi, D:\python\pyinstall\qinshan_data_collection\main.py
+invalid module named engineio.asyncio_server - imported by engineio, D:\python\pyinstall\qinshan_data_collection\main.py
+invalid module named engineio.async_tornado - imported by engineio, socketio.tornado, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named pwd - imported by posixpath, shutil, tarfile, getpass, distutils.util, webbrowser, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named os2 - imported by os, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named _emx_link - imported by os, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named ce - imported by os, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named riscos - imported by os, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named riscospath - imported by os, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named riscosenviron - imported by os, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named fcntl - imported by tempfile, subprocess, eventlet.greenio.base, click.termui, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named org - imported by pickle, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named 'org.python' - imported by copy, D:\python\pyinstall\qinshan_data_collection\main.py, xml.sax
+missing module named readline - imported by cmd, pdb, code, D:\python\pyinstall\qinshan_data_collection\main.py
+missing module named 'dbm.ndbm' - imported by future.moves.dbm.ndbm
+missing module named gdbm - imported by anydbm, future.moves.dbm.gnu
+missing module named 'dbm.gnu' - imported by future.moves.dbm.gnu
+missing module named 'dbm.dumb' - imported by future.moves.dbm.dumb
+missing module named bsddb3 - imported by bsddb
+missing module named _pybsddb - imported by bsddb, bsddb.db
+missing module named dbm - imported by future.standard_library, future.moves.dbm, whichdb, anydbm, future.moves.dbm.ndbm
+missing module named 'test.support' - imported by future.moves.test.support
+missing module named _datetime - imported by future.backports.datetime
+missing module named reprlib.recursive_repr - imported by reprlib, future.backports.misc
+missing module named _thread.get_ident - imported by _thread, future.backports.misc, werkzeug.local
+missing module named 'urllib.request' - imported by werkzeug.http, werkzeug.test, werkzeug.debug.tbtools
+missing module named blinker - imported by flask.signals
+missing module named 'werkzeug.http.cookiejar' - imported by werkzeug.test
+missing module named colorama - imported by click._compat
+missing module named 'watchdog.events' - imported by werkzeug._reloader
+missing module named watchdog - imported by werkzeug._reloader
+missing module named 'werkzeug.http.server' - imported by werkzeug.serving
+missing module named termcolor - imported by werkzeug.serving
+missing module named dotenv - imported by flask.cli
+invalid module named jinja2.asyncsupport - imported by jinja2
+missing module named pretty - imported by jinja2.utils
+missing module named 'jinja2.debugrenderer' - imported by jinja2.debug
+missing module named __pypy__ - imported by jinja2.debug
+invalid module named socketio.asyncio_redis_manager - imported by socketio
+invalid module named socketio.asyncio_namespace - imported by socketio
+invalid module named socketio.asyncio_manager - imported by socketio
+invalid module named socketio.asyncio_server - imported by socketio
+missing module named 'gevent.monkey' - imported by socketio.kombu_manager, socketio.redis_manager
+missing module named hiredis - imported by redis.utils, redis.connection
+missing module named kombu - imported by socketio.kombu_manager

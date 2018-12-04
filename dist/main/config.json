@@ -1,0 +1,176 @@
+{
+	"collection":{
+		"service_add_label_position":{
+			"target_service_name":"POSITIONS",
+			"ID":"ID_KEY_CR",
+			"X":0,
+			"Y":0,
+			"Z":0
+		},
+		"service_user_info_setting_get":{
+			"way":"sqlite",
+			"user_id":"test",
+			"fields":"key,value"
+
+		},
+		"service_user_info_setting_set":{
+			"way":"sqlite",
+			"user_id":"test",
+			"key":"key",
+			"value":"value",
+			"settings":{}
+		},
+		"service_database_platform":{
+			"host":"192.168.10.170",
+			"database":"qs_test",
+			"user":"root",
+			"password":"dms@8888",
+			"view_or_table":"nuclear_import_events",
+			"ID":"important_typical_events_id",
+			"fields":"file_url,number,title,name,station,unit,workshop,important_typical_events_id,content_id,video_addr,fm_code,eq_code,description,field1,field2,field3,field4,field5,field6,field7,field8,field9,field10",
+			"has_3d_markup":"",
+			"page":1,
+			"limit":10,
+			"search":"",
+			"search_fields":"",
+			"search":"",
+			"search_fields":"",
+			"search2":"",
+			"search2_fields":"",
+			"search3":"",
+			"search3_fields":"",
+			"search4":"",
+			"search4_fields":"",
+			"search5":"",
+			"search5_fields":""
+		},
+		"service_notes_add":{
+			"way":"sqlite",
+			"url":"position.db",
+			"view_or_table":"NOTES",
+			"note":{
+				"TITLE":"TITLE",
+				"GUID":"GUID",
+				"COLOR":"COLOR",
+				"FILE_URL":"FILE_URL",
+				"RESOURCE_ID":"RESOURCE_ID",
+				"CONTENT":"CONTENT",
+				"COMMENT":"COMMENT"
+			}
+		},
+		"service_notes_get":{
+			"way":"sqlite",
+			"url":"position.db",
+			"view_or_table":"NOTES",
+			"fields":"ID,GUID,COLOR,FILE_URL,RESOURCE_ID,CONTENT,CREATE_TIME,COMMENT,TITLE",
+			"ID":"ID",
+			"page":1,
+			"limit":10
+		},
+		"service_notes_delete":{
+			"way":"sqlite",
+			"url":"position.db",
+			"view_or_table":"NOTES",
+			"ID":""
+
+		},
+
+		
+		"service_3dmark_add":{
+			"url":"position.db",
+			"view_or_table":"markup",
+			"way":"sqlite",
+			"target_service_name":"",
+			"target_id":"",
+			"stepLength":"",
+			"velocity":"",
+			"type":"",
+			"resource_id":"",
+			"model_key":"",
+			"guid":"",
+			"json_content":""
+		}
+		,
+		"service_3dmark_get":{
+			"url":"position.db",
+			"view_or_table":"markup",
+			"way":"sqlite",
+			"fields":"target_service_name,target_id,stepLength,velocity,type,resource_id,model_key,json_content,guid",
+			"target_service_name":"",
+			"target_id":""
+		}
+		,
+		"service_3dmark_delete":{
+			"way":"sqlite",
+			"url":"position.db",
+			"view_or_table":"markup",
+			"target_service_name":"",
+			"target_id":""
+
+		},
+		"service_pi_data":{
+			"fields":"time_stamp,value",
+			"way":"sqlite",
+			"tag":"sinusoid",
+			"ip":"10.16.18.115",
+			"time_range_start":"*-12h",
+			"time_range_end":"*",
+			"AFTimeSpan_Parse":"1m"
+		},
+		"service_http_avatar_query":{
+			"url":"http://192.168.10.169:8000/avatar/data/queryMetaObjData",
+			"metaObjectName":"房间_设备_工单",
+			"data":{
+				"orderBy": "", 
+				"forceFetch": "1",
+				 "pageNumber": 1, 
+				 "pageSize": 1, 
+				 "filterStr": "{'ROOM_NUMBER':'401'}", 
+				 "orFilter": 1
+			},
+			"ID":"",
+			"visituser":"",
+			"dict_type":"",
+			"login_Service":"service_http_avatar_login"
+		},
+
+		"service_http_avatar_login":{
+			"url":"http://192.168.10.169:8000/avatar/sys/userrole/loginCheck",
+			"method":"post",
+			"data":{
+				"userName":"admin",
+				"passWord":"123456"
+			}
+				
+		},
+		"service_database_sqlserver":{
+			"host":"192.168.10.170",
+			"database":"qs_test",
+			"user":"root",
+			"password":"dms@8888",
+			"sql":"",
+			"ID":"important_typical_events_id",
+			"OrderBy":"",
+			"page":1,
+			"limit":10,
+			"search":"",
+			"search_fields":"",
+			"search":"",
+			"search_fields":"",
+			"search2":"",
+			"search2_fields":"",
+			"search3":"",
+			"search3_fields":"",
+			"search4":"",
+			"search4_fields":"",
+			"search5":"",
+			"search5_fields":""
+		}
+	},
+   "config":{
+      "port":8888,
+      "ip":"localhost",
+      "net_port":8888
+   }
+
+}

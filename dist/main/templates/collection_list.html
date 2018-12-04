@@ -1,0 +1,2334 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>采集列表</title>
+	
+	 <style type="text/css">
+	 	
+		ul
+		{
+			list-style:none; /* 去掉ul前面的符号 */
+			margin: 10px; /* 与外界元素的距离为0 */
+			padding: 0px; /* 与内部元素的距离为0 */
+			width: auto; /* 宽度根据元素内容调整 */
+		}
+		ul li
+		{
+			float:left; /* 向左漂移，将竖排变为横排 */
+			margin: 10px
+		}
+		.top{
+			width: 100%
+			height:30%;
+		}
+		.top textarea{
+			width: 100%;
+			height:200px;
+		}
+		.menu {
+			width: 100%;
+			height:50px;
+			margin-top: 220px
+		}
+		table td{
+			width: 300px
+		}
+		.label_name{
+			width: 150px
+		}
+		.left{
+			width: 60%;
+			float:left;
+		}
+		.right{
+			width: 35%;
+			float: right;
+		}
+		.top{
+			position: fixed;
+			width: 60%
+		}
+		input{
+			width: 420px
+		}
+		.platform{
+			overflow: hidden;
+		}
+	 </style>
+</head>
+<script type="text/javascript">
+	Array.prototype.remove = function(val) { 
+			var index = this.indexOf(val); 
+			if (index > -1) { 
+				this.splice(index, 1); 
+			} 
+	};
+</script>
+<script src="/static/vue.js"></script>
+
+<body>
+
+   
+
+
+<div class="content" id="content">
+	<div class="left">
+		<div class="top">
+				<textarea id="info" ></textarea>
+		</div>
+		<div class="menu">
+			<ul>
+				<li><a href="javascript:changeTab('rtsp2rtmp')">rtsp2rtmp</a></li>
+				<li><a href="javascript:changeTab('sqlserver')">sqlserver</a></li>
+				<li><a href="javascript:changeTab('mysql')">mysql</a></li>
+				<li><a href="javascript:changeTab('oracle')">oracle</a></li>
+				<li><a href="javascript:changeTab('modbus')">modbus</a></li>
+				<li><a href="javascript:changeTab('opc')">opc</a></li>
+				<li><a href="javascript:changeTab('bacnet')">bacnet</a></li>
+				<li><a href="javascript:changeTab('avatar')">avatar 数润</a></li>
+				<li><a href="javascript:changeTab('platform')">platform 平台</a></li>
+			</ul>
+		</div>
+		<div class="items">
+
+
+			<div class="platform" v-if="show=='sqlserver'">
+				<button onclick="getData('sqlserver')">刷新</button>
+				<button @click="model_show = 'sqlserver_create'">新增sqlserver服务</button>
+
+				<table>
+					<thead>
+						<td>
+							service
+						</td>
+						
+						<td>
+							备注
+						</td>
+						<td >
+							操作
+						</td>
+					</thead>
+					<tbody>
+						<tr v-for="sqlserver in sqlserver_data">
+							<td> {{'{{sqlserver.service}}'}}</td>
+							<td> {{'{{sqlserver.backup}}'}} </td>
+					
+							<td>
+									<button @click="showTemplate('sqlserver',sqlserver)">查看json</button>
+									<button @click="send('sqlserver',sqlserver)">测试</button>
+									<button @click="showSqlserver('update',sqlserver)">修改</button>
+									<button @click="deleteTemplate('sqlserver',sqlserver)">删除</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+
+
+
+
+
+			<div class="platform" v-if="show=='opc'">
+					<button onclick="getData('opc')">刷新</button>
+					<button @click="model_show = 'opc_create'">新增 opc 服务</button>
+
+					<table>
+						<thead>
+							<td>
+								service
+							</td>
+							
+							<td>
+								备注
+							</td>
+							<td >
+								操作
+							</td>
+						</thead>
+						<tbody>
+							<tr v-for="opc in opc_data">
+								<td> {{'{{opc.service}}'}}</td>
+								<td> {{'{{opc.backup}}'}} </td>
+						
+								<td>
+										<button @click="showTemplate('opc',opc)">查看json</button>
+										<button @click="send('opc',opc)">测试</button>
+										<button @click="showOPC('update',opc)">修改</button>
+										<button @click="deleteTemplate('opc',opc)">删除</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+
+
+			<div class="platform" v-if="show=='rtsp2rtmp'">
+					<button onclick="getData('rtsp2rtmp')">刷新</button>
+					<button @click="model_show = 'rtsp2rtmp_create'">新增 rtsp 转 rtmp 服务</button>
+
+					<table>
+						<thead>
+							<td>
+								service
+							</td>
+							
+							<td>
+								备注
+							</td>
+							<td >
+								操作
+							</td>
+						</thead>
+						<tbody>
+							<tr v-for="rtsp2rtmp in rtsp2rtmp_data">
+								<td> {{'{{rtsp2rtmp.service}}'}}</td>
+								<td> {{'{{rtsp2rtmp.backup}}'}} </td>
+						
+								<td>
+										<button @click="showTemplate('rtsp2rtmp',rtsp2rtmp)">查看json</button>
+										<button @click="send('rtsp2rtmp',rtsp2rtmp)">测试</button>
+										<button @click="showRtsp2Rtmp('update',rtsp2rtmp)">修改</button>
+										<button @click="deleteTemplate('rtsp2rtmp',rtsp2rtmp)">删除</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			<div class="platform" v-if="show=='platform'">
+				<button onclick="getData('platform')">刷新</button>
+				<button @click="model_show = 'platform_create'">新增平台服务</button>
+
+				<table>
+					<thead>
+						<td>
+							service
+						</td>
+						
+						<td>
+							备注
+						</td>
+						<td >
+							操作
+						</td>
+					</thead>
+					<tbody>
+						<tr v-for="platform in platform_data">
+							<td> {{'{{platform.service}}'}}</td>
+							<td> {{'{{platform.backup}}'}} </td>
+					
+							<td>
+									<button @click="showTemplate('platform',platform)">查看json</button>
+									<button @click="send('platform',platform)">测试</button>
+									<button @click="showPlatform('update',platform)">修改</button>
+									<button @click="deleteTemplate('platform',platform)">删除</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="avatar" v-if="show=='avatar'">
+				<button onclick="getData('avatar')">刷新</button>
+				<button @click="model_show = 'avatar_create'">新增数润服务</button>
+
+				<table>
+					<thead>
+						<td>
+							service
+						</td>
+						
+						<td>
+							备注
+						</td>
+						<td >
+							操作
+						</td>
+					</thead>
+					<tbody>
+						<tr v-for="avatar in avatar_data">
+							<td> {{'{{avatar.service}}'}}</td>
+							<td> {{'{{avatar.backup}}'}} </td>
+					
+							<td>
+									<button @click="showTemplate('avatar',avatar)">查看json</button>
+									<button @click="send('avatar',avatar)">测试</button>
+									<button @click="showAvatar('update',avatar)">修改</button>
+									<button @click="deleteTemplate('avatar',avatar)">删除</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="bacnet" v-if="show=='bacnet'">
+				<button onclick="getData('bacnet')">刷新</button>
+				<button @click="model_show = 'bacnet_create'">新增bacnet服务</button>
+				
+				<table>
+					<thead>
+						<td>
+							service
+						</td>
+						
+						<td>
+							备注
+						</td>
+						<td >
+							操作
+						</td>
+					</thead>
+					<tbody>
+						<tr v-for="bacnet in bacnet_data">
+							<td> {{'{{bacnet.service}}'}}</td>
+							<td> {{'{{bacnet.backup}}'}} </td>
+					
+							<td>
+									<button @click="showTemplate('bacnet',bacnet)">查看json</button>
+									<button @click="send('bacnet',bacnet)">测试</button>
+									<button @click="showBacnet('update',bacnet)">修改</button>
+									<button @click="deleteTemplate('bacnet',bacnet)">删除</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				
+			</div>
+		</div>
+		
+	</div>
+	
+	<div class="right" >
+
+
+			<div v-if="model_show === 'sqlserver_update'">
+					<label style="color: red">*</label>必传字段   
+					<form id="updateSqlserver">
+							修改sqlserver服务 <br/>
+							-------------------------------
+						
+							<input type="hidden" name="service_type" value="service_database_sqlserver">
+							
+				
+							<div>
+								<div class="label_name"><label style="color: red">*</label>service</div>
+								<input name="service" placeholder="服务访问名称" v-model="sqlserver_form.service"></input>
+							</div>
+							 <div>
+								<div class="label_name">
+									备注
+								</div>
+								<input name="backup" placeholder="" v-model="sqlserver_form.backup"></input>
+							</div>
+							<div>
+								<div class="label_name">
+									host
+								</div>
+								<input name="host" placeholder="数据库ip" v-model="sqlserver_form.host"></input>
+							</div>
+							<div>
+								<div class="label_name">
+									database
+								</div>
+								<input name="database" placeholder="数据库名称" v-model="sqlserver_form.database"></input>
+							</div>
+							<div>
+								<div class="label_name">
+									user
+								</div>
+								<input name="user" placeholder="数据库用户名" v-model="sqlserver_form.user"></input>
+							</div>
+							<div>
+								<div class="label_name">
+									password
+								</div>
+								<input name="password" placeholder="数据库密码" v-model="sqlserver_form.password"></input>
+							</div>
+							<div>
+								<div class="label_name">
+									sql
+								</div>
+								<input name="sql" placeholder="数据库表、视图" v-model="sqlserver_form.sql"></input>
+							</div>
+							<div>
+								<div class="label_name">
+									ID
+								</div>
+								<input name="ID" placeholder="表、视图的ID字段" v-model="sqlserver_form.ID"></input>
+							</div>
+
+							<div>
+								<div class="label_name">
+									OrderBy
+								</div>
+								<input name="OrderBy" placeholder="排序" v-model="sqlserver_form.OrderBy"></input>
+							</div>
+
+							<div>
+								<div class="label_name">
+									<label style="color: red">*</label>
+									page
+								</div>
+								<input name="page" placeholder="分页，从1开始" v-model="sqlserver_form.page"></input>
+							</div>
+
+							<div>
+								<div class="label_name">
+									<label style="color: red">*</label>
+									limit
+								</div>
+								<input name="limit" placeholder="分页条数" v-model="sqlserver_form.limit"></input>
+							</div>
+
+							<div>
+								<div class="label_name">
+									<label style="color: red">*</label>
+									search
+								</div>
+								<input name="search" placeholder="模糊搜索内容" value="" v-model="sqlserver_form.search"></input>
+							</div>
+							<div>
+								<div class="label_name">
+									search_fields
+								</div>
+								<input name="search_fields" placeholder="搜索的字段，以',' 分割" value="" v-model="sqlserver_form.search_fields"></input>
+							</div>
+							
+							
+
+							<br/>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								search2
+							</div>
+							<input name="search2" placeholder="模糊搜索内容" value="" v-model="sqlserver_form.search2"></input>
+						</div>
+					
+						<div>
+							<div class="label_name">
+								search2_fields
+							</div>
+							<input name="search2_fields" placeholder="搜索的字段，以',' 分割" value=""  v-model="sqlserver_form.search2_fields"></input>
+						</div>
+						<br/>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								search3
+							</div>
+							<input name="search3" placeholder="等于搜索内容" value=""  v-model="sqlserver_form.search3"></input>
+						</div>
+						
+						<div>
+							<div class="label_name">
+								search3_fields
+							</div>
+							<input name="search3_fields" placeholder="等于搜索的字段，以',' 分割" value=""  v-model="sqlserver_form.search3_fields"></input>
+						</div>
+						<br/>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								search4
+							</div>
+							<input name="search4" placeholder="等于搜索内容" value=""  v-model="sqlserver_form.search4"></input>
+						</div>
+						
+						<div>
+							<div class="label_name">
+								search4_fields
+							</div>
+							<input name="search4_fields" placeholder="等于搜索的字段，以',' 分割" value=""  v-model="sqlserver_form.search4_fields"></input>
+						</div>
+						<br/>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								search5
+							</div>
+							<input name="search5" placeholder="in搜索内容" value=""  v-model="sqlserver_form.search5"></input>
+						</div>
+						
+						<div>
+							<div class="label_name">
+								search5_fields
+							</div>
+							<input name="search5_fields" placeholder="in搜索的字段" value=""  v-model="sqlserver_form.search5_fields"></input>
+						</div>
+						
+						<br/>
+							
+							
+							<div>
+								--------------------------------
+								<div>
+									<button type="button" onclick="showJSON('sqlserver','#updateSqlserver')">查看内容json</button>
+									<button type="button" onclick="updateTemplate('#updateSqlserver','sqlserver')">保存记录</button>
+								</div>
+							</div> 
+							<br/>
+						<br/>
+						<br/>
+						<br/>
+					</form>
+			</div>
+
+
+			<div v-if="model_show === 'sqlserver_create'">
+				<label style="color: red">*</label>必传字段   
+				<form id="newSqlserver">
+						新增sqlserver服务 <br/>
+						-------------------------------
+					
+						<input type="hidden" name="service_type" value="service_database_sqlserver">
+						
+			
+						<div>
+							<div class="label_name"><label style="color: red">*</label>service</div>
+							<input name="service" placeholder="服务访问名称" ></input>
+						</div>
+						 <div>
+							<div class="label_name">
+								备注
+							</div>
+							<input name="backup" placeholder=""></input>
+						</div>
+						<div>
+							<div class="label_name">
+								host
+							</div>
+							<input name="host" placeholder="数据库ip"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								database
+							</div>
+							<input name="database" placeholder="数据库名称"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								user
+							</div>
+							<input name="user" placeholder="数据库用户名"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								password
+							</div>
+							<input name="password" placeholder="数据库密码"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								sql
+							</div>
+							<input name="sql" placeholder="数据库表、视图"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								ID
+							</div>
+							<input name="ID" placeholder="表、视图的ID字段"></input>
+						</div>
+
+						<div>
+							<div class="label_name">
+								OrderBy
+							</div>
+							<input name="OrderBy" placeholder="排序，必须写，否则分页row_number不能用"></input>
+						</div>
+						
+					
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								page
+							</div>
+							<input name="page" placeholder="分页，从1开始"></input>
+						</div>
+
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								limit
+							</div>
+							<input name="limit" placeholder="分页条数"></input>
+						</div>
+
+
+						
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								search
+							</div>
+							<input name="search" placeholder="模糊搜索内容" value=""></input>
+						</div>
+						
+						<div>
+							<div class="label_name">
+								search_fields
+							</div>
+							<input name="search_fields" placeholder="搜索的字段，以',' 分割" value=""></input>
+						</div>
+						<br/>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								search2
+							</div>
+							<input name="search2" placeholder="模糊搜索内容" value=""></input>
+						</div>
+					
+						<div>
+							<div class="label_name">
+								search2_fields
+							</div>
+							<input name="search2_fields" placeholder="搜索的字段，以',' 分割" value=""></input>
+						</div>
+						<br/>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								search3
+							</div>
+							<input name="search3" placeholder="等于搜索内容" value=""></input>
+						</div>
+						
+						<div>
+							<div class="label_name">
+								search3_fields
+							</div>
+							<input name="search3_fields" placeholder="等于搜索的字段，以',' 分割" value=""></input>
+						</div>
+						<br/>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								search4
+							</div>
+							<input name="search4" placeholder="等于搜索内容" value=""></input>
+						</div>
+						
+						<div>
+							<div class="label_name">
+								search4_fields
+							</div>
+							<input name="search4_fields" placeholder="等于搜索的字段，以',' 分割" value=""></input>
+						</div>
+						<br/>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								search5
+							</div>
+							<input name="search5" placeholder="in搜索内容" value=""></input>
+						</div>
+						
+						<div>
+							<div class="label_name">
+								search5_fields
+							</div>
+							<input name="search5_fields" placeholder="in搜索的字段" value=""></input>
+						</div>
+						
+						<br/>
+						<div>
+							--------------------------------
+							<div>
+								<button type="button" onclick="showJSON('sqlserver','#newSqlserver')">查看内容json</button>
+								<button type="button" onclick="saveTemplte('#newSqlserver','sqlserver')">保存记录</button>
+							</div>
+						</div> 
+						<br/>
+					<br/>
+					<br/>
+					<br/>
+				</form>
+			</div>
+
+			<div v-if="model_show === 'opc_update'">
+				<label style="color: red">*</label>必传字段   
+				<form id="updateOpc">
+						-------------------------------
+						<br/>
+						更新opc服务<br/>
+						
+						<input type="hidden" name="service_type" value="service_collect_opc">
+						<div>
+							<div class="label_name"><label style="color: red">*</label>service</div>
+							<input name="service" placeholder="服务访问名称"  v-model="opc_form.service" ></input>
+						</div>
+						<div>
+							<div class="label_name">
+								备注
+							</div>
+							<input name="backup" placeholder="ip+采集描述，一个设备一条记录"  v-model="opc_form.backup" ></input>
+						</div>
+
+						<div>
+							<div class="label_name">project_id</div>
+							<input name="project_id" placeholder="项目ID，标记"  v-model="opc_form.project_id"  ></input>
+						</div>
+						<div>
+							<div class="label_name">
+								opc_server_ip
+							</div>
+							<input name="opc_server_ip" placeholder="opc 服务器ip"  v-model="opc_form.opc_server_ip" ></input>
+						</div>
+
+						<div>
+							<div class="label_name">
+								opc_name
+							</div>
+							<input name="opc_name" placeholder="opc 服务器名称"  v-model="opc_form.opc_name" ></input>
+						</div>
+						-------------------------------
+						<br/>
+						采集点位列表 <br/>
+						
+						<div v-for="opc_item in opc_form.opc_items" >
+							<input name="opc_items"  placeholder="opc 点位表" v-model="opc_item.obj" :title="opc_item.obj"></input>
+							<button type="button" @click="removeOPCDevice(opc_item)">删除</button>
+						</div>
+						<br>
+						
+
+
+						<div>
+							--------------------------------
+							<div>
+								<button type="button" onclick="showJSON('opc','#updateOpc')">查看内容json</button>
+								<button type="button" onclick='updateTemplate("#updateOpc","opc")'>保存记录</button>
+							</div>
+						</div>
+						<br>
+						--------------------------------<br/>
+						新增点位<br/>
+						<div>
+							<div class="label_name">
+								tag	
+							</div>
+							<input v-model="opc_device.tag" placeholder="opc 的 item_id"></input>
+						</div>
+
+
+						
+						<button  type="button" @click="addOPCDevice()">添加点位</button>
+						
+
+					
+				
+
+
+			</form>
+		
+		</div>
+
+
+
+		<div v-if="model_show === 'opc_create'">
+			<label style="color: red">*</label>必传字段   
+			<form id="newOpc">
+					-------------------------------
+					<br/>
+					新增opc服务<br/>
+					
+					<input type="hidden" name="service_type" value="service_collect_opc">
+					<div>
+						<div class="label_name"><label style="color: red">*</label>service</div>
+						<input name="service" placeholder="服务访问名称" ></input>
+					</div>
+					<div>
+						<div class="label_name">
+							备注
+						</div>
+						<input name="backup" placeholder="ip+采集描述，一个设备一条记录"></input>
+					</div>
+
+					<div>
+						<div class="label_name">project_id</div>
+						<input name="project_id" placeholder="项目ID，标记" ></input>
+					</div>
+					<div>
+						<div class="label_name">
+							opc_server_ip
+						</div>
+						<input name="opc_server_ip" placeholder="opc 服务器ip"></input>
+					</div>
+
+					<div>
+						<div class="label_name">
+							opc_name
+						</div>
+						<input name="opc_name" placeholder="opc 服务器名称"></input>
+					</div>
+					-------------------------------
+					<br/>
+					采集点位列表 <br/>
+					
+					<div v-for="opc_item in opc_form.opc_items" >
+						<input name="opc_items"  placeholder="opc 点位表" v-model="opc_item.obj" :title="opc_item.obj"></input>
+						<button type="button" @click="removeOPCDevice(opc_item)">删除</button>
+					</div>
+					<br>
+					
+
+
+					<div>
+						--------------------------------
+						<div>
+							<button type="button" onclick="showJSON('opc','#newOpc')">查看内容json</button>
+							<button type="button" onclick='saveTemplte("#newOpc","opc")'>保存记录</button>
+						</div>
+					</div>
+					<br>
+					--------------------------------<br/>
+					新增点位<br/>
+					<div>
+						<div class="label_name">
+							tag	
+						</div>
+						<input v-model="opc_device.tag" placeholder="opc 的 item_id"></input>
+					</div>
+
+
+					
+					<button  type="button" @click="addOPCDevice()">添加点位</button>
+					
+
+					
+				
+
+
+			</form>
+		
+		</div>
+
+		<div v-if="model_show === 'rtsp2rtmp_update'">
+				<label style="color: red">*</label>必传字段   
+				<form id="updateRtsp2rtmp">
+						修改rtsp 转rtmp服务 <br/>
+						-------------------------------
+					
+						<input type="hidden" name="service_type" value="service_rtsp2rtmp">
+						
+			
+						<div>
+							<div class="label_name"><label style="color: red">*</label>service</div>
+							<input v-model="rtsp2rtmp_form.service" name="service" placeholder="服务访问名称" ></input>
+						</div>
+						 <div>
+							<div class="label_name">
+								备注
+							</div>
+							<input v-model="rtsp2rtmp_form.backup" placeholder="" name="backup" ></input>
+						</div>
+						<div>
+							<div class="label_name">
+								模板template,
+								样例：ffmpeg -f rtsp -rtsp_transport tcp -i ...
+							</div>
+							<input v-model="rtsp2rtmp_form.template" name="template"  placeholder="模板" value="ffmpeg -thread_queue_size 8192 -i $rtsp -max_muxing_queue_size 9160 -vcodec copy -acodec copy -ab 128k -f flv $rtmp"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								rtsp 地址 url
+							</div>
+							<input v-model="rtsp2rtmp_form.url" name="url"  placeholder=""></input>
+						</div>
+						<div>
+							<div class="label_name">
+								前缀 prex_rtmp 
+							</div>
+							<input v-model="rtsp2rtmp_form.prex_rtmp" name="prex_rtmp" placeholder="rtmp 服务器前缀，如rtmp://192.168.30.129:1935/live/livestream/"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								规则rule
+							</div>
+							<input v-model="rtsp2rtmp_form.rule" name="rule" placeholder="one 一个人一个，many 一个人多个"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								<div class="label_name"><label style="color: red">*</label>操作 operation</div>
+								
+							</div>
+							<input v-model="rtsp2rtmp_form.operation" name="operation"  placeholder="start 开始，stop 结束"></input>
+						</div>
+						
+						<br/>
+						<div>
+							--------------------------------
+							<div>
+								<button type="button" onclick="showJSON('rtsp2rtmp','#updateRtsp2rtmp')">查看内容json</button>
+								<button type="button" onclick="updateTemplate('#updateRtsp2rtmp','rtsp2rtmp')">保存记录</button>
+							</div>
+						</div> 
+						<br/>
+					<br/>
+					<br/>
+					<br/>
+				</form>
+		</div>
+		<div v-if="model_show === 'rtsp2rtmp_create'">
+				<label style="color: red">*</label>必传字段   
+				<form id="newRtsp2rtmp">
+						新增rtsp 转rtmp服务 <br/>
+						-------------------------------
+					
+						<input type="hidden" name="service_type" value="service_rtsp2rtmp">
+						
+			
+						<div>
+							<div class="label_name"><label style="color: red">*</label>service</div>
+							<input name="service" placeholder="服务访问名称" ></input>
+						</div>
+						 <div>
+							<div class="label_name">
+								备注
+							</div>
+							<input name="backup" placeholder=""></input>
+						</div>
+						<div>
+							<div class="label_name">
+								模板template
+								样例：ffmpeg -f rtsp -rtsp_transport tcp -i ...
+							</div>
+							<input name="template" placeholder="模板" value="ffmpeg -thread_queue_size 10240 -i $rtsp -max_muxing_queue_size 10240 -vcodec copy -acodec copy -ab 128k -f flv $rtmp"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								rtsp 地址 url
+							</div>
+							<input name="url" placeholder=""></input>
+						</div>
+						<div>
+							<div class="label_name">
+								前缀 prex_rtmp 
+							</div>
+							<input name="prex_rtmp" placeholder="rtmp 服务器前缀，如rtmp://192.168.30.129:1935/live/livestream/"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								规则rule
+							</div>
+							<input name="rule" placeholder="one 一个人一个，many 一个人多个"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								操作 operation
+							</div>
+							<input name="operation" placeholder="start 开始，stop 结束"></input>
+						</div>
+						
+						<br/>
+						<div>
+							--------------------------------
+							<div>
+								<button type="button" onclick="showJSON('rtsp2rtmp','#newRtsp2rtmp')">查看内容json</button>
+								<button type="button" onclick="saveTemplte('#newRtsp2rtmp','rtsp2rtmp')">保存记录</button>
+							</div>
+						</div> 
+						<br/>
+					<br/>
+					<br/>
+					<br/>
+				</form>
+		</div>
+		<div v-if="model_show === 'platform_update'">
+					<label style="color: red">*</label>必传字段   
+					<form id="updatePlatform">
+							修改平台服务 <br/>
+							-------------------------------
+						
+							<input type="hidden" name="service_type" value="service_database_platform">
+							
+				
+							<div>
+								<div class="label_name"><label style="color: red">*</label>service</div>
+								<input name="service" placeholder="服务访问名称" v-model="platform_form.service"></input>
+							</div>
+							 <div>
+								<div class="label_name">
+									备注
+								</div>
+								<input name="backup" placeholder="" v-model="platform_form.backup"></input>
+							</div>
+							<div>
+								<div class="label_name">
+									host
+								</div>
+								<input name="host" placeholder="数据库ip" v-model="platform_form.host"></input>
+							</div>
+							<div>
+								<div class="label_name">
+									database
+								</div>
+								<input name="database" placeholder="数据库名称" v-model="platform_form.database"></input>
+							</div>
+							<div>
+								<div class="label_name">
+									user
+								</div>
+								<input name="user" placeholder="数据库用户名" v-model="platform_form.user"></input>
+							</div>
+							<div>
+								<div class="label_name">
+									password
+								</div>
+								<input name="password" placeholder="数据库密码" v-model="platform_form.password"></input>
+							</div>
+							<div>
+								<div class="label_name">
+									view_or_table
+								</div>
+								<input name="view_or_table" placeholder="数据库表、视图" v-model="platform_form.view_or_table"></input>
+							</div>
+							<div>
+								<div class="label_name">
+									ID
+								</div>
+								<input name="ID" placeholder="表、视图的ID字段" v-model="platform_form.ID"></input>
+							</div>
+							<div>
+								<div class="label_name">
+									fields
+								</div>
+								<input name="fields" placeholder="字段，以及',' 分割" v-model="platform_form.fields" :title="platform_form.fields"></input>
+							</div>
+							<div>
+							<div class="label_name">
+								has_3d_markup
+							</div>
+							<input name="has_3d_markup" placeholder="是否有3d_markup。0，或空表示没有，1表示有" v-model="platform_form.has_3d_markup"></input>
+						</div>
+							<div>
+								<div class="label_name">
+									<label style="color: red">*</label>
+									page
+								</div>
+								<input name="page" placeholder="分页，从1开始" v-model="platform_form.page"></input>
+							</div>
+
+							<div>
+								<div class="label_name">
+									<label style="color: red">*</label>
+									limit
+								</div>
+								<input name="limit" placeholder="分页条数" v-model="platform_form.limit"></input>
+							</div>
+
+							<div>
+								<div class="label_name">
+									<label style="color: red">*</label>
+									search
+								</div>
+								<input name="search" placeholder="模糊搜索内容" value="" v-model="platform_form.search"></input>
+							</div>
+							<div>
+								<div class="label_name">
+									search_fields
+								</div>
+								<input name="search_fields" placeholder="搜索的字段，以',' 分割" value="" v-model="platform_form.search_fields"></input>
+							</div>
+							
+							
+
+							<br/>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								search2
+							</div>
+							<input name="search2" placeholder="模糊搜索内容" value="" v-model="platform_form.search2"></input>
+						</div>
+					
+						<div>
+							<div class="label_name">
+								search2_fields
+							</div>
+							<input name="search2_fields" placeholder="搜索的字段，以',' 分割" value=""  v-model="platform_form.search2_fields"></input>
+						</div>
+						<br/>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								search3
+							</div>
+							<input name="search3" placeholder="等于搜索内容" value=""  v-model="platform_form.search3"></input>
+						</div>
+						
+						<div>
+							<div class="label_name">
+								search3_fields
+							</div>
+							<input name="search3_fields" placeholder="等于搜索的字段，以',' 分割" value=""  v-model="platform_form.search3_fields"></input>
+						</div>
+						<br/>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								search4
+							</div>
+							<input name="search4" placeholder="等于搜索内容" value=""  v-model="platform_form.search4"></input>
+						</div>
+						
+						<div>
+							<div class="label_name">
+								search4_fields
+							</div>
+							<input name="search4_fields" placeholder="等于搜索的字段，以',' 分割" value=""  v-model="platform_form.search4_fields"></input>
+						</div>
+						<br/>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								search5
+							</div>
+							<input name="search5" placeholder="in搜索内容" value=""  v-model="platform_form.search5"></input>
+						</div>
+						
+						<div>
+							<div class="label_name">
+								search5_fields
+							</div>
+							<input name="search5_fields" placeholder="in搜索的字段" value=""  v-model="platform_form.search5_fields"></input>
+						</div>
+						
+						<br/>
+							
+							
+							<div>
+								--------------------------------
+								<div>
+									<button type="button" onclick="showJSON('platform','#updatePlatform')">查看内容json</button>
+									<button type="button" onclick="updateTemplate('#updatePlatform','platform')">保存记录</button>
+								</div>
+							</div> 
+							<br/>
+						<br/>
+						<br/>
+						<br/>
+					</form>
+			</div>
+
+
+		<div v-if="model_show === 'platform_create'">
+				<label style="color: red">*</label>必传字段   
+				<form id="newPlatform">
+						新增平台服务 <br/>
+						-------------------------------
+					
+						<input type="hidden" name="service_type" value="service_database_platform">
+						
+			
+						<div>
+							<div class="label_name"><label style="color: red">*</label>service</div>
+							<input name="service" placeholder="服务访问名称" ></input>
+						</div>
+						 <div>
+							<div class="label_name">
+								备注
+							</div>
+							<input name="backup" placeholder=""></input>
+						</div>
+						<div>
+							<div class="label_name">
+								host
+							</div>
+							<input name="host" placeholder="数据库ip"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								database
+							</div>
+							<input name="database" placeholder="数据库名称"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								user
+							</div>
+							<input name="user" placeholder="数据库用户名"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								password
+							</div>
+							<input name="password" placeholder="数据库密码"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								view_or_table
+							</div>
+							<input name="view_or_table" placeholder="数据库表、视图"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								ID
+							</div>
+							<input name="ID" placeholder="表、视图的ID字段"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								fields
+							</div>
+							<input name="fields" placeholder="字段，以及',' 分割"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								has_3d_markup
+							</div>
+							<input name="has_3d_markup" placeholder="是否有3d_markup.0，或空表示没有，1表示有"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								page
+							</div>
+							<input name="page" placeholder="分页，从1开始"></input>
+						</div>
+
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								limit
+							</div>
+							<input name="limit" placeholder="分页条数"></input>
+						</div>
+
+
+						
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								search
+							</div>
+							<input name="search" placeholder="模糊搜索内容" value=""></input>
+						</div>
+						
+						<div>
+							<div class="label_name">
+								search_fields
+							</div>
+							<input name="search_fields" placeholder="搜索的字段，以',' 分割" value=""></input>
+						</div>
+						<br/>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								search2
+							</div>
+							<input name="search2" placeholder="模糊搜索内容" value=""></input>
+						</div>
+					
+						<div>
+							<div class="label_name">
+								search2_fields
+							</div>
+							<input name="search2_fields" placeholder="搜索的字段，以',' 分割" value=""></input>
+						</div>
+						<br/>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								search3
+							</div>
+							<input name="search3" placeholder="等于搜索内容" value=""></input>
+						</div>
+						
+						<div>
+							<div class="label_name">
+								search3_fields
+							</div>
+							<input name="search3_fields" placeholder="等于搜索的字段，以',' 分割" value=""></input>
+						</div>
+						<br/>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								search4
+							</div>
+							<input name="search4" placeholder="等于搜索内容" value=""></input>
+						</div>
+						
+						<div>
+							<div class="label_name">
+								search4_fields
+							</div>
+							<input name="search4_fields" placeholder="等于搜索的字段，以',' 分割" value=""></input>
+						</div>
+						<br/>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>
+								search5
+							</div>
+							<input name="search5" placeholder="in搜索内容" value=""></input>
+						</div>
+						
+						<div>
+							<div class="label_name">
+								search5_fields
+							</div>
+							<input name="search5_fields" placeholder="in搜索的字段" value=""></input>
+						</div>
+						
+						<br/>
+						<div>
+							--------------------------------
+							<div>
+								<button type="button" onclick="showJSON('platform','#newPlatform')">查看内容json</button>
+								<button type="button" onclick="saveTemplte('#newPlatform','platform')">保存记录</button>
+							</div>
+						</div> 
+						<br/>
+					<br/>
+					<br/>
+					<br/>
+				</form>
+		</div>
+
+		<div v-if="model_show === 'avatar_create'">
+				<label style="color: red">*</label>必传字段   
+				<form id="newAvatar">
+						新增数润服务 <br/>
+						-------------------------------
+						<!-- 转发到这个service-->
+						<input type="hidden" name="service_type" value="service_http_avatar_query">
+						<!-- 解决登录-->
+						<input type="hidden" name="login_Service" value="service_http_avatar_login">
+			
+						<div>
+							<div class="label_name"><label style="color: red">*</label>service</div>
+							<input name="service" placeholder="服务访问名称" ></input>
+						</div>
+						<div>
+							<div class="label_name">
+								备注
+							</div>
+							<input name="backup" placeholder=""></input>
+						</div>
+						<div>
+							<div class="label_name">
+								url
+							</div>
+							<input name="url" placeholder="url"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								metaObjectName
+							</div>
+							<input name="metaObjectName" placeholder="metaObjectName 对象，例如：房间_设备_工单"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>visituser
+							</div>
+							<input name="visituser" placeholder="当前访问用户"></input>
+						</div>
+
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>dict_type,en英文对照，zh中文对照
+							</div>
+							<input name="dict_type" placeholder="dict_type ，en 英文,zh 中文" value="en"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								ID
+							</div>
+							<input name="ID" placeholder="记录ID字段，唯一标志" v-model="avatar_form.ID"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>data,动态修改
+							</div>
+							<input name="data" placeholder="数据对象" value='{"orderBy":"","forceFetch":"1","pageNumber":1,"pageSize":1,"filterStr":"{\"ROOM_NUMBER\":\"401\"}","orFilter":1}'></input>
+						</div>
+
+					
+						
+						<div>
+							--------------------------------
+							<div>
+								<button type="button" onclick="showJSON('avatar','#newAvatar')">查看内容json</button>
+								<button type="button" onclick="saveTemplte('#newAvatar','avatar')">保存记录</button>
+							</div>
+						</div>
+				</form>
+		</div>
+
+
+			<div v-if="model_show === 'avatar_update'">
+				<label style="color: red">*</label>必传字段
+				<form id="updateAvatar">
+						更新数润服务 <br/>
+						-------------------------------
+						<!-- 转发到这个service-->
+						<input type="hidden" name="service_type" value="service_http_avatar_query" v-model="avatar_form.service_type">
+						<!-- 解决登录-->
+						<input type="hidden" name="login_Service" value="service_http_avatar_login" v-model="avatar_form.login_Service">
+			
+						<div>
+							<div class="label_name"><label style="color: red">*</label>service</div>
+							<input name="service" placeholder="服务访问名称" v-model="avatar_form.service"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								备注
+							</div>
+							<input name="backup" placeholder="" v-model="avatar_form.backup"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								url
+							</div>
+							<input name="url" placeholder="url" v-model="avatar_form.url"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								metaObjectName
+							</div>
+							<input name="metaObjectName" placeholder="metaObjectName 对象，例如：房间_设备_工单" v-model="avatar_form.metaObjectName"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>visituser
+							</div>
+							<input name="visituser" placeholder="当前访问用户" v-model="avatar_form.visituser"></input>
+						</div>
+
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>dict_type,en英文对照，zh中文对照
+							</div>
+							<input name="dict_type" placeholder="dict_type ，en 英文,zh 中文" value="en" v-model="avatar_form.dict_type"></input>
+						</div>
+
+						<div>
+							<div class="label_name">
+								ID
+							</div>
+							<input name="ID" placeholder="记录ID字段，唯一标志" v-model="avatar_form.ID"></input>
+						</div>
+						<div>
+							<div class="label_name">
+								<label style="color: red">*</label>data,动态修改
+							</div>
+							<input name="data" placeholder="数据对象" value='{"orderBy":"","forceFetch":"1","pageNumber":1,"pageSize":1,"filterStr":"{\"ROOM_NUMBER\":\"401\"}","orFilter":1}' :title="avatar_form.data" v-model="avatar_form.data" ></input>
+						</div>
+
+					
+						
+						<div>
+							--------------------------------
+							<div>
+								<button type="button" onclick="showJSON('avatar','#updateAvatar')">查看内容json</button>
+								<button type="button" onclick="updateTemplate('#updateAvatar','avatar')">保存记录</button>
+							</div>
+						</div>
+				</form>
+		</div>
+
+		<div v-if="model_show === 'bacnet_update'">
+			<form id="updateBacnet">
+					修改设备 <br/>
+					-------------------------------
+					<input type="hidden" name="service_type" value="service_collect_bacnet">
+					<div>
+						<div class="label_name">service</div>
+						<input name="service" v-model="bacnet_form.service" placeholder="服务访问名称" readonly="true"></input>
+					</div>
+					<div>
+						<div class="label_name">
+							备注
+						</div>
+						<input name="backup" v-model="bacnet_form.backup" placeholder="ip+采集描述，一个设备一条记录"></input>
+					</div>
+					采集列表 <br/>
+					
+					<div v-for="bacnet_item in bacnet_form.bacnet_items" >
+						<input name="bacnet_items"  placeholder="采集点位json串" v-model="bacnet_item.obj" :title="bacnet_item.obj"></input>
+						<button type="button" @click="removeBacnetDevice(bacnet_item)">删除</button>
+					</div>
+					<br>
+					
+
+
+					<div>
+						--------------------------------
+						<div>
+							<button type="button" onclick="showJSON('bacnet','#updateBacnet')">查看内容json</button>
+							<button type="button" onclick='updateTemplate("#updateBacnet","bacnet")'>保存记录</button>
+						</div>
+					</div>
+					<br>
+					--------------------------------<br/>
+					新增点位<br/>
+					<div>
+						<div class="label_name">
+							tag	
+						</div>
+						<input v-model="bacnet_device.tag" placeholder="转义后的标签，唯一"></input>
+					</div>
+
+					
+					<div>
+						<div class="label_name">
+							device_address
+						</div>
+						<input v-model="bacnet_device.device_address" placeholder="设备ip地址"></input>
+					</div>
+					
+					<div>
+						<div class="label_name">
+							object_types	
+						</div>
+						<input v-model="bacnet_device.object_types" placeholder="数据类型，驼峰命名法。如analogValue"></input>
+					</div>
+
+					<div>
+						<div class="label_name">
+							object_instance	
+						</div>
+						<input v-model="bacnet_device.object_instance" placeholder="设备中的采集点，如699"></input>
+					</div>
+
+				
+					<div>
+						<div class="label_name">
+							prop
+						</div>
+						<input v-model="bacnet_device.prop" placeholder="原始属性,驼峰命名法.如presentValue"></input>
+					</div>
+					
+					
+				
+					
+					<button  type="button" @click="addBacnetDevice()">添加点位</button>
+			</form>
+		</div>
+
+		<div v-if="model_show === 'bacnet_create'">
+			<label style="color: red">*</label>必传字段   
+			<form id="newBacnet">
+					-------------------------------
+					<br/>
+					新增bacnet服务<br/>
+					
+					<input type="hidden" name="service_type" value="service_collect_bacnet">
+					<div>
+						<div class="label_name"><label style="color: red">*</label>service</div>
+						<input name="service" placeholder="服务访问名称" ></input>
+					</div>
+					<div>
+						<div class="label_name">
+							备注
+						</div>
+						<input name="backup" placeholder="ip+采集描述，一个设备一条记录"></input>
+					</div>
+					-------------------------------
+					<br/>
+					采集列表 <br/>
+					
+					<div v-for="bacnet_item in bacnet_form.bacnet_items" >
+						<input name="bacnet_items"  placeholder="采集点位json串" v-model="bacnet_item.obj" :title="bacnet_item.obj"></input>
+						<button type="button" @click="removeBacnetDevice(bacnet_item)">删除</button>
+					</div>
+					<br>
+					
+
+
+					<div>
+						--------------------------------
+						<div>
+							<button type="button" onclick="showJSON('bacnet','#newBacnet')">查看内容json</button>
+							<button type="button" onclick='saveTemplte("#newBacnet","bacnet")'>保存记录</button>
+						</div>
+					</div>
+					<br>
+					--------------------------------<br/>
+					新增点位<br/>
+					<div>
+						<div class="label_name">
+							tag	
+						</div>
+						<input v-model="bacnet_device.tag" placeholder="转义后的标签，唯一"></input>
+					</div>
+
+					
+					<div>
+						<div class="label_name">
+							device_address
+						</div>
+						<input v-model="bacnet_device.device_address" placeholder="设备ip地址"></input>
+					</div>
+					
+					<div>
+						<div class="label_name">
+							object_types	
+						</div>
+						<input v-model="bacnet_device.object_types" placeholder="数据类型，驼峰命名法。如analogValue"></input>
+					</div>
+
+					<div>
+						<div class="label_name">
+							object_instance	
+						</div>
+						<input v-model="bacnet_device.object_instance" placeholder="设备中的采集点，如699"></input>
+					</div>
+
+				
+					<div>
+						<div class="label_name">
+							prop
+						</div>
+						<input v-model="bacnet_device.prop" placeholder="原始属性"></input>
+					</div>
+					
+					
+				
+					
+					<button  type="button" @click="addBacnetDevice()">添加点位</button>
+					
+
+					
+				
+
+
+			</form>
+		</div>
+	</div>
+	
+
+	
+</div>
+<script src="/static/jquery.js"></script>
+<script src="/static/jquery.serializeObject.js"></script>
+<script type="text/javascript">
+
+	var vm = new Vue({
+	  el: '#content',
+	  data: {
+	  	show:"sqlserver",
+
+	  	sqlserver_data:[],
+	  	sqlserver_form:{
+	  		service:"",
+	  		backup:"",
+	  		"host":"192.168.10.170",
+			"database":"qs_test",
+			"user":"root",
+			"password":"dms@8888",
+			"sql":"",
+			"ID":"important_typical_events_id",
+			"OrderBy":"",
+			"page":1,
+			"limit":10,
+			"search":"",
+			"search_fields":"",
+			"search":"",
+			"search_fields":"",
+			"search2":"",
+			"search2_fields":"",
+			"search3":"",
+			"search3_fields":"",
+			"search4":"",
+			"search4_fields":"",
+			"search5":"",
+	  	},
+	  	opc_data:[],
+
+	  	
+
+	  	opc_form:{
+	  		service:"",
+	  		backup:"",
+	  		"project_id":"test",
+			"opc_items":[],
+			"opc_server_ip":"192.168.2.185",
+			"opc_name":"Matrikon.OPC.Simulation.1"
+	  	},
+	  	opc_device:{
+	  		tag:""
+	  	},
+	  	rtsp2rtmp_data:[],
+	  	rtsp2rtmp_form:{
+
+	  	},
+
+	  	platform_data:[],
+	  	platform_form:{
+	  		service:"",
+	  		backup:"",
+	  		"host":"",
+			"database":"",
+			"user":"root",
+			"password":"",
+			"view_or_table":"",
+			"ID":"",
+			"fields":"",
+			"has_3d_markup":"",
+			"page":"",
+			"limit":"",
+			"search":"",
+			"search_fields":"",
+
+			"search2":"",
+			"search2_fields":"",
+
+			"search3":"",
+			"search3_fields":"",
+
+			"search4":"",
+			"search4_fields":"",
+
+			"search5":"",
+			"search5_fields":""
+
+	  	},
+
+	  	avatar_data:[],
+	  	avatar_form:{
+	  		service:"",
+	  		backup:"",
+	  		url:"",
+	  		metaObjectName:"",
+	  		data:"",
+	  		visituser:"",
+	  		dict_type:"",
+	  		ID:""
+	  	},
+
+	  	model_show:"",
+	  	bacnet_data:[],
+	  	
+	  	bacnet_form:{
+	  		service:"",
+	  		backup:"",
+	  		bacnet_items:[]
+	  		
+
+	  	},
+	  	bacnet_device:{
+	  		device_address:"",
+	  		object_types:"",
+	  		object_instance:"",
+	  		"prop":"",
+	  		"tag":""
+	  	},
+	  	opc_device:{
+	  		tag:""
+	  	}
+
+	  },
+	  methods:{
+	  	showTemplate(type,obj){
+	  		// console.log(type)
+	  		// console.log(template)
+	  		if(type=="avatar"){
+	  			template = JSON.parse(obj.template)
+	  			delete template["Data"]["collect"]["V"]['login_Service']
+	  			delete template["Data"]["collect"]["V"]['service_type']
+	  			delete template["Data"]["collect"]["V"]['url']
+	  			delete template["Data"]["collect"]["V"]["metaObjectName"]
+	  			delete template["Data"]["collect"]["V"]["ID"]
+	  			addInfo(JSON.stringify(template))
+	  		}else if(type=='platform'){
+	  			template = JSON.parse(obj.template)
+	  			delete template["Data"]["collect"]["V"]['service_type']
+	  			delete template["Data"]["collect"]["V"]['host']
+	  			delete template["Data"]["collect"]["V"]['database']
+	  			delete template["Data"]["collect"]["V"]["user"]
+	  			delete template["Data"]["collect"]["V"]["password"]
+	  			delete template["Data"]["collect"]["V"]['view_or_table']
+	  			delete template["Data"]["collect"]["V"]['ID']
+	  			delete template["Data"]["collect"]["V"]['fields']
+	  			delete template["Data"]["collect"]["V"]["has_3d_markup"]  			
+	  			delete template["Data"]["collect"]["V"]["search_fields"]
+	  			delete template["Data"]["collect"]["V"]["search2_fields"]
+	  			delete template["Data"]["collect"]["V"]["search3_fields"]
+	  			delete template["Data"]["collect"]["V"]["search4_fields"]
+	  			delete template["Data"]["collect"]["V"]["search5_fields"]
+	  			addInfo(JSON.stringify(template))
+	  		}else if(type=='bacnet'){
+	  			template = JSON.parse(obj.template)
+	  			delete template["Data"]["collect"]["V"]['service_type']
+	  			delete template["Data"]["collect"]["V"]['bacnet_items']
+	  			addInfo(JSON.stringify(template))
+	  		}else if(type=="rtsp2rtmp"){
+	  			template = JSON.parse(obj.template)
+	  			delete template["Data"]["collect"]["V"]['service_type']
+	  			delete template["Data"]["collect"]["V"]['template']
+	  			delete template["Data"]["collect"]["V"]['rule']
+	  			delete template["Data"]["collect"]["V"]['url']
+	  			delete template["Data"]["collect"]["V"]['prex_rtmp']
+	  			addInfo(JSON.stringify(template))
+	  			
+	  		}else if(type=="opc"){
+	  			template = JSON.parse(obj.template)
+	  			delete template["Data"]["collect"]["V"]['service_type']
+	  			delete template["Data"]["collect"]["V"]['project_id']
+	  			delete template["Data"]["collect"]["V"]['opc_items']
+	  			delete template["Data"]["collect"]["V"]['opc_server_ip']
+	  			delete template["Data"]["collect"]["V"]['opc_name']
+	  			addInfo(JSON.stringify(template))
+	  		}else if(type == "sqlserver"){
+	  			template = JSON.parse(obj.template)
+	  			delete template["Data"]["collect"]["V"]['service_type']
+	  			delete template["Data"]["collect"]["V"]['host']
+	  			delete template["Data"]["collect"]["V"]['database']
+	  			delete template["Data"]["collect"]["V"]["user"]
+	  			delete template["Data"]["collect"]["V"]["password"]
+	  			delete template["Data"]["collect"]["V"]['ID']
+	  			delete template["Data"]["collect"]["V"]['sql']
+	  			delete template["Data"]["collect"]["V"]['OrderBy']
+	  			delete template["Data"]["collect"]["V"]["search_fields"]
+	  			delete template["Data"]["collect"]["V"]["search2_fields"]
+	  			delete template["Data"]["collect"]["V"]["search3_fields"]
+	  			delete template["Data"]["collect"]["V"]["search4_fields"]
+	  			delete template["Data"]["collect"]["V"]["search5_fields"]
+	  			addInfo(JSON.stringify(template))
+	  		}
+	  		else{
+	  			addInfo(obj.template)	
+	  		}
+	  		
+	  	},
+	  	deleteTemplate(type,obj){
+
+	  		deleteTempalte(type,obj["service"])
+	  		
+	  	},
+	  	showBacnet(type,obj){
+	  		this.model_show = "bacnet_update"
+	  		if(type=="update"){
+	  			var template = JSON.parse(obj['template'])
+	  			var data = template["Data"]["collect"]["V"]
+	  			
+	  			var arr = data["bacnet_items"]
+	  			data["bacnet_items"] = []
+	  			for(var i=0;i<arr.length;i++){
+	  				data["bacnet_items"].push({obj:JSON.stringify(arr[i])})
+	  			}
+	  			data["backup"] = obj["backup"]
+	  			// data["service"] = obj["service"]
+	  			this.bacnet_form = data
+	  		}
+	  		
+	  	},
+
+	  	showOPC(type,obj){
+	  		this.model_show = "opc_update"
+	  		var template = JSON.parse(obj['template'])
+	  		var data = template["Data"]["collect"]["V"]
+	  		data["backup"] = obj["backup"]
+	  		var arr = data["opc_items"]
+	  		data["opc_items"] = []
+  			for(var i=0;i<arr.length;i++){
+  				data["opc_items"].push({obj:arr[i]})
+  			}
+	  		this.opc_form = data
+	  	},
+	  	showAvatar(type,obj){
+	  		this.model_show = "avatar_update"
+	  		var template = JSON.parse(obj['template'])
+	  		var data = template["Data"]["collect"]["V"]
+	  		data["backup"] = obj["backup"]
+	  		data['data'] = JSON.stringify(data['data'])
+	  		//data['service'] = JSON.stringify(data['service'])
+	  		this.avatar_form = data
+	  	},
+	  	showPlatform(type,obj){
+	  		this.model_show = "platform_update"
+	  		var template = JSON.parse(obj['template'])
+	  		var data = template["Data"]["collect"]["V"]
+	  		data["backup"] = obj["backup"]
+	  		data['data'] = JSON.stringify(data['data'])
+	  		this.platform_form = data
+	  	},
+	  	showSqlserver(type,obj){
+	  		this.model_show = "sqlserver_update"
+	  		var template = JSON.parse(obj['template'])
+	  		var data = template["Data"]["collect"]["V"]
+	  		data["backup"] = obj["backup"]
+	  		//data['data'] = JSON.stringify(data['data'])
+	  		this.sqlserver_form = data
+	  	},
+	  	showRtsp2Rtmp(type,obj){
+	  		this.model_show = "rtsp2rtmp_update"
+	  		var template = JSON.parse(obj['template'])
+	  		var data = template["Data"]["collect"]["V"]
+	  		data["backup"] = obj["backup"]
+	  		data['data'] = JSON.stringify(data['data'])
+	  		this.rtsp2rtmp_form = data
+	  	},
+	  	addBacnetDevice(){
+	  		var deivce = this.bacnet_device
+
+	  		if(!(deivce["device_address"]
+	  			||deivce["object_types"]
+	  			||deivce["object_instance"]
+	  			||deivce["tag"]
+	  			||deivce["prop"])){
+	  			alert("点位表信息不能为空!")
+	  			return 
+
+	  		}
+	  		for (var i =0;i<this.bacnet_form.bacnet_items.length;i++){
+	  			var obj = this.bacnet_form.bacnet_items[i]["obj"]
+	  			obj = JSON.parse(obj)
+	  			if(obj["tag"] == deivce["tag"]){
+	  				alert("tag 已经存在！")
+	  				return 
+	  			}
+
+	  			if((obj["device_address"]+obj["object_types"]+obj["object_instance"]+obj["prop"])==(deivce["device_address"]+deivce["object_types"]+deivce["object_instance"]+deivce["prop"])){
+	  				alert("device_address、object_types、object_instance、prop 已经存在！")
+	  				return 
+	  			}
+	  			
+	  		}
+	  		this.bacnet_form.bacnet_items.push({obj:JSON.stringify(this.bacnet_device)})
+	  	},
+
+	  	addOPCDevice(){
+	  		var deivce = this.opc_device
+
+	  		if(!(deivce["tag"])){
+	  			alert("点位表信息不能为空!")
+	  			return 
+
+	  		}
+	  		for (var i =0;i<this.opc_form.opc_items.length;i++){
+	  			var obj = this.opc_form.opc_items[i]["obj"]
+	  			if(obj == deivce["tag"]){
+	  				alert("tag 已经存在！")
+	  				return 
+	  			}
+	  		}
+	  		this.opc_form.opc_items.push({obj:this.opc_device.tag})
+	  	},
+	  	removeBacnetDevice(obj){
+	  		this.bacnet_form.bacnet_items.remove(obj)
+	  		
+	  	},
+	  	removeOPCDevice(obj){
+	  		this.opc_form.opc_items.remove(obj)
+	  	},
+	  	send(type,obj){
+
+	  		if(type=='avatar'){
+	  			template = JSON.parse(obj.template)
+	  			delete template["Data"]["collect"]["V"]['login_Service']
+	  			delete template["Data"]["collect"]["V"]['service_type']
+	  			delete template["Data"]["collect"]["V"]['url']
+	  			delete template["Data"]["collect"]["V"]["metaObjectName"]
+	  			delete template["Data"]["collect"]["V"]["ID"]
+	  			addInfo(JSON.stringify(template))
+	  			window.socket.emit("message",JSON.stringify(template));
+	  		}else if(type =='platform'){
+	  			template = JSON.parse(obj.template)
+	  			delete template["Data"]["collect"]["V"]['service_type']
+	  			delete template["Data"]["collect"]["V"]['host']
+	  			delete template["Data"]["collect"]["V"]['database']
+	  			delete template["Data"]["collect"]["V"]["user"]
+	  			delete template["Data"]["collect"]["V"]["password"]
+	  			delete template["Data"]["collect"]["V"]['view_or_table']
+	  			delete template["Data"]["collect"]["V"]['ID']
+	  			delete template["Data"]["collect"]["V"]['fields']
+	  			delete template["Data"]["collect"]["V"]["has_3d_markup"]
+	  			delete template["Data"]["collect"]["V"]["search_fields"]
+	  			delete template["Data"]["collect"]["V"]["search2_fields"]
+	  			delete template["Data"]["collect"]["V"]["search3_fields"]
+	  			delete template["Data"]["collect"]["V"]["search4_fields"]
+	  			delete template["Data"]["collect"]["V"]["search5_fields"]
+	  			
+	  			addInfo(JSON.stringify(template))
+	  			window.socket.emit("message",JSON.stringify(template));
+
+	  		}else if(type=='bacnet'){
+	  			template = JSON.parse(obj.template)
+	  			delete template["Data"]["collect"]["V"]['service_type']
+	  			delete template["Data"]["collect"]["V"]['bacnet_items']
+	  			addInfo(JSON.stringify(template))
+	  			window.socket.emit("message",JSON.stringify(template));
+	  		}else if(type=="rtsp2rtmp"){
+	  			template = JSON.parse(obj.template)
+	  			delete template["Data"]["collect"]["V"]['service_type']
+	  			delete template["Data"]["collect"]["V"]['template']
+	  			delete template["Data"]["collect"]["V"]['rule']
+	  			delete template["Data"]["collect"]["V"]['url']
+	  			delete template["Data"]["collect"]["V"]['prex_rtmp']
+	  			addInfo(JSON.stringify(template))
+	  			window.socket.emit("message",JSON.stringify(template));
+	  		}else if(type == 'opc'){
+	  			template = JSON.parse(obj.template)
+	  			delete template["Data"]["collect"]["V"]['service_type']
+	  			delete template["Data"]["collect"]["V"]['opc_items']
+	  			delete template["Data"]["collect"]["V"]['opc_server_ip']
+	  			delete template["Data"]["collect"]["V"]['opc_name']
+	  			delete template["Data"]["collect"]["V"]['project_id']
+	  			addInfo(JSON.stringify(template))
+	  			window.socket.emit("message",JSON.stringify(template));
+	  		}else if(type == "sqlserver"){
+	  			template = JSON.parse(obj.template)
+	  			delete template["Data"]["collect"]["V"]['service_type']
+	  			delete template["Data"]["collect"]["V"]['host']
+	  			delete template["Data"]["collect"]["V"]['database']
+	  			delete template["Data"]["collect"]["V"]["user"]
+	  			delete template["Data"]["collect"]["V"]["password"]
+	  			delete template["Data"]["collect"]["V"]['ID']
+	  			delete template["Data"]["collect"]["V"]['sql']
+	  			delete template["Data"]["collect"]["V"]['OrderBy']
+	  			delete template["Data"]["collect"]["V"]["search_fields"]
+	  			delete template["Data"]["collect"]["V"]["search2_fields"]
+	  			delete template["Data"]["collect"]["V"]["search3_fields"]
+	  			delete template["Data"]["collect"]["V"]["search4_fields"]
+	  			delete template["Data"]["collect"]["V"]["search5_fields"]
+	  			addInfo(JSON.stringify(template))
+	  			window.socket.emit("message",JSON.stringify(template));
+	  		}
+	  		else {
+	  			addInfo("send --"+obj['template'])
+	  			window.socket.emit("message",obj["template"]);
+	  		}
+	  		
+	  	}
+	  }
+	})
+</script>
+<script type="text/javascript">
+
+	
+
+	
+
+	function changeTab(type){
+			console.log("...")
+			vm.show= type
+			vm.model_show="0"
+	}
+	function addFirst(){
+		var  test= $($(".prop-list").children()[0]).html()
+		test="<div class='props-item'>"+test+"</div>"
+		$(".prop-list").append(test)
+	}
+	function removeLast(){
+		if($(".props-item").length<=1){
+			alert("至少有一个属性")
+			return;
+		}
+		$(".props-item:last").remove()
+	}
+	 function toTempalteJSON(form,type){
+
+
+	 	if(type=="bacnet"){
+	 		var obj = $(form).serializeObject()
+	 		//如果是数组
+	 		if(Array.isArray(obj["bacnet_items"])){
+	 			var arr = obj["bacnet_items"]
+	 			obj["bacnet_items"] = []
+	 			for(var i=0;i<arr.length;i++){
+	 				obj["bacnet_items"].push(JSON.parse(arr[i]))
+	 			}
+	 		}else{
+	 			if(obj["bacnet_items"]){
+	 				obj["bacnet_items"] = [JSON.parse(obj["bacnet_items"])]
+	 			}else{
+	 				obj["bacnet_items"] = []
+	 			}
+	 			
+	 		}
+	 		return obj
+	 	}else if(type=="avatar"){
+	 		return $(form).serializeObject()	
+	 	}else if(type == 'opc'){
+	 		var obj = $(form).serializeObject()
+	 		//如果是数组
+	 		if(Array.isArray(obj["opc_items"])){
+	 			// var arr = obj["bacnet_items"]
+	 			// obj["bacnet_items"] = []
+	 			// for(var i=0;i<arr.length;i++){
+	 			// 	obj["bacnet_items"].push(JSON.parse(arr[i]))
+	 			// }
+	 		}else{
+	 			if(obj["opc_items"]){
+	 				obj["opc_items"] = [obj["opc_items"]]
+	 			}else{
+	 				obj["opc_items"] = []
+	 			}
+	 			
+	 		}
+	 		return obj
+	 	}
+	 	else{
+	 		return $(form).serializeObject()	
+	 	}
+
+	 	// if(!form){
+	 	// 	var jsonObj = $(form).serializeObject()	
+	 	// }else{
+	 	// 	var jsonObj = $(form).serializeObject()
+	 	// }
+	 	
+        // var name = jsonObj["name"]
+      
+        // delete jsonObj["name"]
+        // var value = jsonObj["value"]
+        // delete jsonObj["value"]
+        // jsonObj["prop2tag"]={}
+        //   //如果是对象就直接返回
+        // if(!Array.isArray(name)){
+        // 	jsonObj["prop2tag"][name]=value
+        // }else{
+        // 	for(var i =0;i<name.length;i++){
+	       //  	if(name[i] && value[i]){
+	       //  		jsonObj["prop2tag"][name[i]]=value[i]
+	       //  	}
+       	// 	}
+        // }
+        
+        // if(type=="bacnet"){
+        // 	jsonObj["bacnet_items"]=[{
+        // 		prop2tag:jsonObj['prop2tag'],
+        // 		device_address:jsonObj['device_address'],
+        // 		object_types:jsonObj['object_types'],
+        // 		object_instance:jsonObj['object_instance'],
+        // 		}
+        // 	]
+        // 	    delete jsonObj['prop2tag'];
+        // 		delete jsonObj['device_address'];
+        // 		delete jsonObj['object_types'];
+        // 		delete jsonObj['object_instance'];
+        // }
+        console.log(jsonObj)
+        return jsonObj
+       
+    }
+    function showJSON(type,form){
+    	if(type=='bacnet'){
+    		var jsonObj = toTempalteJSON(form,type)
+    	 	addInfo(JSON.stringify(jsonObj))
+    	}else if(type == 'avatar'){
+    		var jsonObj = toTempalteJSON(form,type)
+    		jsonObj['data'] = JSON.parse(jsonObj['data'])
+    	 	addInfo(JSON.stringify(jsonObj))
+    	}else{
+    		var jsonObj = toTempalteJSON(form,type)
+    		
+    	 	addInfo(JSON.stringify(jsonObj))
+    	}
+    	
+    }
+    function addInfo(info){
+    		var html=$("#info").val()
+        	$("#info").val(info+"\n\n"+html)
+    }
+    function saveJSON(type,service,backup,json,operation){
+    		delete json["backup"]
+    		var template={
+				"Action": "DataSend",
+				"Data": {
+					"collect": {
+						"T": "S",
+						"V": json
+					}
+				}
+			}
+
+			addInfo(JSON.stringify(template))
+			if(!(type && service && json)){
+				alert("参数有误")
+				return
+			}
+
+			if(operation=="update"){
+				var url = "/updateTemplte"
+			}else if(operation=="save"){
+				var url = "/saveTemplte"
+			}
+			$.ajax({
+				url:url,
+				method:"post",
+				data:{
+					type:type,
+					service:service,
+					backup:backup,
+					template:JSON.stringify(template)
+
+				},
+				success(res){
+					addInfo(res)
+				}
+			})
+
+    }
+
+
+
+    function saveTemplte(form,type){
+    	var json = toTempalteJSON(form,type)
+    	if(type=='avatar'){
+    		json['data'] = JSON.parse(json['data'])
+    	}else if(type=="bacnet"){
+    		if(json["bacnet_items"].length<=0){
+    			alert("点位列表不能为空")
+    			return 
+    		}
+    	}else if(type == 'rtsp2rtmp'){
+    		if(!(json["template"] && json["url"] && json["prex_rtmp"] && json["rule"] && json["operation"])){
+    			alert("信息不能为空")
+    			return
+    		}
+    	}else if(type=="opc"){
+    		if(!(json["opc_server_ip"] && json["opc_name"] && json["opc_items"] && json["opc_items"].length > 0)){
+    			alert("信息不能为空")
+    			return
+    		}
+    	}
+    	saveJSON(type,json["service"],json['backup'],json,"save")
+    	getData(type)
+    }
+
+    function getData(type){
+    	$.ajax({
+    		url:"/getTemplte",
+    		method:"get",
+    		data:{"type":type},
+    		dataType:"json",
+    		success:function(res){
+    			console.log(res)
+    			if(type == 'bacnet'){
+    				vm.bacnet_data = res.data
+    			}else if(type == 'avatar'){
+    				vm.avatar_data = res.data
+    			}else if(type =='platform'){
+    				vm.platform_data = res.data
+    			}else if(type == 'rtsp2rtmp'){
+    				vm.rtsp2rtmp_data = res.data
+    			}else if(type=='opc'){
+    				vm.opc_data = res.data
+    			}else{
+    				vm[type+"_data"] = res.data
+    			}
+    			
+    		}
+    	})
+    }
+
+    function deleteTempalte(type,service){
+    	
+    	$.ajax({
+    		url:"/deleteTemplte",
+    		method:"post",
+    		data:{"service":service},
+    		success:function(res){
+    			addInfo(res)
+    			getData(type)
+    		}
+
+    	})
+    }
+    function updateBacnet(){
+    	var json = toTempalteJSON("#updateBacnet","bacnet")
+    	saveJSON("bacnet",json["service"],json['backup'],json,"update")
+    	getData("bacnet")
+    }
+
+      function updateTemplate(form,type){
+    	var json = toTempalteJSON(form,type)
+    	if(type=='avatar'){
+    		json['data'] = JSON.parse(json['data'])
+    	}
+    	saveJSON(type,json["service"],json['backup'],json,"update")
+    	getData(type)
+    }
+
+
+   //  function updateJSON(type,service,backup,json){
+   //  		delete json["backup"]
+   //  		var template={
+			// 	"Action": "DataSend",
+			// 	"Data": {
+			// 		"collect": {
+			// 			"T": "S",
+			// 			"V": json
+			// 		}
+			// 	}
+			// }
+
+			// addInfo(JSON.stringify(template))
+			// if(!(type && service && json)){
+			// 	addInfo("参数有误")
+			// 	return
+			// }
+			// $.ajax({
+			// 	url:"/updateTemplte",
+			// 	method:"post",
+			// 	data:{
+			// 		type:type,
+			// 		service:service,
+			// 		backup:backup,
+			// 		template:JSON.stringify(template)
+
+			// 	},
+			// 	success(res){
+			// 		addInfo(res)
+			// 	}
+			// })
+
+   //  }
+
+
+</script>
+
+ <script src="/static/socket.io.slim.js"></script>
+  <script type="text/javascript">//<![CDATA[
+  //链接socket,当有第三个参数时，发送采集数据
+  var t=''
+  var ip ="{{ip}}"
+  var port ="{{port}}"
+  var player = "false"
+  function connect_websocket(s, url) {
+   
+    /*创建socket连接*/
+    //ws://" + '59.110.16.96:8032' + "/v1/nr8l3plk34xlff320k1ykoty9uf20ihi/view/dms/1503752076
+    var socket = io.connect('http://'+ip+':'+port+'/collection')
+    socket.on('connect', function() {
+       addInfo("socketio open")
+     
+    });
+    socket.on('reply', function(message) {
+        console.log("get message:"+message)
+       	addInfo("get message:"+message)
+        
+    });
+    window.socket = socket
+   
+  }
+  //是否连接,name是
+  function is_websocket(id, name,play) {
+    //socket不存在，或者未连接
+    if (!window.socket && !window.socket.connected) {
+      alert("websocket未连接.");
+
+    }else {
+      window.socket.emit('message', $(id).val());
+    }
+    if(play == "true"){
+      player = "true"
+    }
+  }
+
+
+  $(function(){
+  	connect_websocket('c','collect')
+  })
+ 
+  </script>
+</body>
+</html>

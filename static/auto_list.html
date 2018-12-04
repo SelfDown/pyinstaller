@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>采集列表</title>
+	<style type="text/css">
+		ul
+		{
+			list-style:none; /* 去掉ul前面的符号 */
+			margin: 10px; /* 与外界元素的距离为0 */
+			padding: 0px; /* 与内部元素的距离为0 */
+			width: auto; /* 宽度根据元素内容调整 */
+		}
+		ul li
+		{
+			float:left; /* 向左漂移，将竖排变为横排 */
+			margin: 10px
+		}
+		.top{
+			width: 100%
+			height:30%;
+		}
+		.top textarea{
+			width: 100%;
+			height:200px;
+		}
+		.menu {
+			width: 100%;
+			margin-top: 220px;
+			overflow:hidden;
+		}
+		table td{
+			width: 300px
+		}
+		.label_name{
+			width: 150px
+		}
+		.left{
+			width: 60%;
+			float:left;
+			
+		}
+		.right{
+			width: 35%;
+			float: right;
+		}
+		.top{
+			position: fixed;
+			width: 60%
+		}
+		input{
+			width: 420px
+		}
+		.items{
+
+		}
+		.content{
+			overflow: hidden;
+		}
+	</style>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="jquery.js"></script>
+	<script src="socket.io.slim.js"></script>
+	<script type="text/javascript" src="config.js"></script>
+</head>
+<body>
+<div id="app">
+	<div class="content" id="content">
+		<div class="left">
+			<div class="top">
+						<textarea id="info" ></textarea>
+			</div>
+			<div class="menu">
+				<ul>
+					
+					<li v-for="item in data.functions">
+						<a @click="changeTab(item.name)" href="javascript:void(0)" >{{item.name}}</a>
+					</li>
+				</ul>
+			</div>
+
+			<div class="items">
+
+
+				<div class="platform" >
+					<button @click="getData">刷新</button>
+					<button @click="showNewItem">新增 {{data.show.module}} 服务</button>
+				</div>
+
+
+
+				<table>
+					<thead>
+						<td>
+							service
+						</td>
+						
+						<td>
+							备注
+						</td>
+						<td >
+							操作
+						</td>
+					</thead>
+					<tbody>
+						<tr v-for="item in data.show.dataList">
+							
+							<td>
+								{{item.service}}
+							</td>
+							<td>
+								{{item.backup}}
+							</td>
+							<td>
+									<button @click="showSendJSON(item)" >查看json</button>
+									<button @click="sendJSON(item)">测试</button>
+									<button @click="showUpdateJSON(item)">修改</button>
+									<button @click="deleteTemplate(item)">删除</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+		</div>
+		<div class="right">
+
+			<div v-if="data.show.operation !=''">
+				<label style="color: red">*</label>必存字段
+				<label style="color: green">*</label>必传字段
+				
+				<form id="service">
+					<div v-if="data.show.operation == 'newItem'">新增 {{data.show.module}} 服务 <br/></div>
+					<div v-if="data.show.operation == 'updateItem'">修改 {{data.show.module}} 服务 <br/></div>
+					-------------------------------
+
+					<div v-for="item in data.show.fields">
+						<div class="label_name" v-if="item.type != 'hidden'">
+							<label style="color: red"  v-if="item.must_save" >*</label>
+							<label style="color: green"  v-if="item.must_send" >*</label>
+							{{item.showName}}
+						</div>
+						<input :type= "item.type" :placeholder="item.placeholder" v-model="data.show.form_data[item.name]" ></input>
+						
+					</div>
+
+					<br/>
+									
+						<div>
+							--------------------------------
+							<div>
+								<button type="button" @click="showJSON">查看内容json</button>
+								<button type="button" @click="save">保存记录</button>
+							</div>
+						</div> 
+					<br/>
+					<br/>
+					<br/>
+					<br/>
+				</form>
+			</div>
+			
+		</div>
+	</div>
+	
+</div>
+
+<script type="text/javascript">
+	var vm = new Vue({
+	  el: '#app',
+	  data: {
+	  	data:{
+	  		message: 'Hello Vue!',
+	  		show:{
+	  			module:"opc",
+	  			operation:"newItem",
+	  			dataList:[],
+	  			fields:[],
+	  			form_data:{}
+	  			
+	  		},
+	  		getDataURL:"",
+	  		saveDataURL:"",
+	  		functions:[
+	  			{
+	  				name:"opc"
+	  			}
+	  		]	
+	  	}
+	    
+	  },
+	  methods:{
+	  	changeTab(module){
+	  		if(this.data.show.module == module){
+	  			return
+	  		}
+	  		this.data.show.module= module
+	  		this.getData()
+	  		console.log(this.data.show)
+	  	},
+	  	showJSON(){
+	  		addInfo(this.toJSON())
+
+	  	},
+	  	getSendJSON(template){
+	  		var fields =  this.data.show.fields
+	  		for (var i = 0;i<fields.length;i++){
+	  			var item = fields[i]
+	  			if(item.must_send == false){
+	  				delete template["Data"]["collect"]["V"][item['name']]
+	  			}
+	  		}
+	  		return template
+	  	},
+	  	deleteTemplate(item){
+	  		var service = item["service"]
+	  		var type = item["type"]
+	  		var _that = this
+	  		$.ajax({
+	    		url:this.data.deleteDataURL,
+	    		method:"post",
+	    		data:{"service":service},
+	    		success:function(res){
+	    			addInfo(res)
+	    			_that.getData()
+	    		}
+
+    		})
+	  	},
+	  	showSendJSON(obj){
+	  		var template = JSON.parse(obj["template"])
+	  		var obj = this.getSendJSON(template)
+	  		addInfo(JSON.stringify(obj))
+	  		return obj
+	  	},
+	  	sendJSON(obj){
+	  		var data = this.showSendJSON(obj);
+	  		window.socket.emit('message',JSON.stringify(data));
+	  	},
+	  	showUpdateJSON(obj){
+	  		this.showNewItem()
+	  		this.data.show.operation ='updateItem'
+	  		var fields =  this.data.show.fields
+	  		var template = JSON.parse(obj["template"])
+	  		var data = template["Data"]["collect"]["V"]
+	  		this.data.show.form_data=data
+	  		this.data.show.form_data["backup"] = obj["backup"]
+	  		
+	  	},
+
+	  	showNewItem(){
+	  		this.data.show.operation ='newItem'
+	  		this.data.show.form_data={}
+	  		var module = this.data.show.module
+	  		var functions = this.data.functions
+	  		for (var i =0;i< functions.length;i++){
+	  			if(functions[i].name == module){
+	  				this.data.show.fields =functions[i].fields
+	  				break;
+	  			}
+	  		}
+	  		
+	  		var fields =  this.data.show.fields
+	  		for (var i = 0;i<fields.length;i++){
+	  			var item = fields[i]
+	  			if(item["value"]){
+	  				this.data.show.form_data[item['name']] = item["value"]
+	  			}else{
+	  				this.data.show.form_data[item['name']] = ""	
+	  			}
+
+	  		}
+	  	},
+	  	save(){
+	  		
+	  		var fields =  this.data.show.fields
+	  		for (var i =0;i< fields.length;i++){
+	  			var item = fields[i]
+	  			if(item.must_save){
+	  				if(!this.data.show.form_data[item['name']]){
+	  					alert(item["name"]+" 不能为空")
+	  					return 
+	  				}
+	  			}
+	  		}
+	  		
+	  		
+	  		var form = this.data.show.form_data
+	  		var backup = form["backup"]
+	  		delete form["backup"]
+	  		var type = form["type"]
+	  		var service = form["service"]
+	  		var _that = this
+
+	  		var template={
+				"Action": "DataSend",
+				"Data": {
+					"collect": {
+						"T": "S",
+						"V": form
+					}
+				}
+			}
+			addInfo(JSON.stringify(template))
+
+			var url = ""
+			if(this.data.show.operation == "newItem"){
+				url = this.data.saveDataURL
+			}else{
+				url = this.data.updateDataURL
+			}
+	  		$.ajax({
+				url:url,
+				method:"post",
+				data:{
+					type:type,
+					service:service,
+					backup:backup,
+					template:JSON.stringify(template)
+				},
+				success(res){
+					addInfo(res)
+					_that.getData()
+					form["backup"]=backup
+				}
+			})
+	  	},
+	  	toJSON(){
+	  		return JSON.stringify(this.data.show.form_data)
+	  	},
+	  	getData(){
+	  		var type = this.data.show.module
+		  	$.ajax({
+	    		url:this.data.getDataURL,
+	    		method:"get",
+	    		data:{"type":type},
+	    		dataType:"json",
+	    		success:function(res){
+	    			console.log(res.data)
+	    			vm.data.show.dataList = res.data
+	    			
+	    		}
+	    	})
+	  	}
+	  },
+	  mounted:function(){
+	  	
+	  	this.data = window.$config.data
+	  	this.getData()
+	  }
+	})
+
+
+	function addInfo(info){
+    		var html=$("#info").val()
+        	$("#info").val(info+"\n\n"+html)
+    }
+</script>
+
+
+ <script type="text/javascript">//<![CDATA[
+  //链接socket,当有第三个参数时，发送采集数据
+  var t=''
+
+  var player = "false"
+  function connect_websocket(s, url) {
+   
+    /*创建socket连接*/
+    //ws://" + '59.110.16.96:8032' + "/v1/nr8l3plk34xlff320k1ykoty9uf20ihi/view/dms/1503752076
+    var socket = io.connect(url)
+    socket.on('connect', function() {
+       addInfo("socketio open")
+     
+    });
+    socket.on('reply', function(message) {
+        console.log("get message:"+message)
+       	addInfo("get message:"+message)
+        
+    });
+    window.socket = socket
+   
+  }
+  //是否连接,name是
+  function is_websocket(id, name,play) {
+    //socket不存在，或者未连接
+    if (!window.socket && !window.socket.connected) {
+      alert("websocket未连接.");
+
+    }else {
+      window.socket.emit('message', $(id).val());
+    }
+    
+  }
+
+
+  $(function(){
+  	connect_websocket('c',window.$config.data.socketioURL)
+  })
+ 
+  </script>
+
+</body>
+</html>
